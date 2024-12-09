@@ -9,6 +9,71 @@
 @import "variables";
 // Syntax highlighting @import is at the bottom of this file
 
+/***************/
+/* BREAKPOINTS */
+/***************/
+
+$breakpoints: (
+    sm: (
+        min: 576px,
+        max: 575.98px,
+    ),
+    md: (
+        min: 768px,
+        max: 767.98px
+    ),
+    lg: (
+        min: 992px,
+        max: 991.98px
+    ),
+    xl: (
+        min: 1200px,
+        max: 1199.98px
+    ),
+    xxl: (
+      min: 1400px,
+      max: 1399.98px,
+    )
+);
+
+@mixin breakpoint($breakpoint, $direction: min) {
+    
+    //check if the supplied breakpoint exists in our breakpoits map
+    @if map-has-key($breakpoints, $breakpoint) { 
+        $breakpoint-values: map-get($breakpoints, $breakpoint);
+        $breakpoint-min: map-get($breakpoint-values, min);
+        $breakpoint-max: map-get($breakpoint-values, max);
+
+        //check if we are writing styles for larger or smaller screens
+        @if $direction == min {
+            @media (min-width: $breakpoint-min) {
+                @content;
+            }
+        }
+
+        @else {
+            @media (max-width: $breakpoint-max) {
+                @content;
+            }
+        }
+    
+    // use the custom value if the breakpoint is not part of the pre-defined list
+    } @else {
+        
+        @if $direction == min {
+            @media (min-width: $breakpoint) {
+                @content;
+            }
+        }
+
+        @else {
+            @media (max-width: $breakpoint) {
+                @content;
+            }
+        }
+    }
+}
+
 /**************/
 /* BASE RULES */
 /**************/
@@ -17,6 +82,10 @@ html {
   font-size: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: 70px;
+
+  @include breakpoint(sm, max) {
+    scroll-padding-top: 50px;
+  }
 }
 
 body {
@@ -28,7 +97,7 @@ body {
 .container {
   margin: 0 auto;
   max-width: 740px;
-  padding: 0 10px;
+  padding: 0 15px;
   width: 100%;
 }
 
@@ -290,11 +359,19 @@ footer {
 //
 
 .about_education {
-  position: relative;
   display: flex;
 
   div {
-    width: 80%;
+    width: 100%;
+  }
+
+  @include breakpoint(sm, max) {
+    flex-direction: column;
+    width: 100%;
+
+    div {
+      width: 100%;
+    }
   }
 }
 
@@ -308,7 +385,58 @@ footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  @include breakpoint(sm, max) {
+    display: none;
+  }
 }
+
+.about_avatar_container_mobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+
+
+  @include breakpoint(sm, max) {
+    display: flex;
+  }
+}
+
+.about_socials {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 1.5rem;
+  gap: 0.5rem;
+
+  @include breakpoint(sm, max) {
+    margin: 1rem 0;
+
+    svg {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+  }
+}
+
+.email {
+  @include breakpoint(sm, max) {
+    svg {
+      height: 1.75rem;
+      width: 1.75rem;
+    }
+  }
+}
+
+.socials_name {
+  display: block;
+
+  @include breakpoint(sm, max) {
+    display: none;
+  }
+}
+
 
 .about_heading {
   font-family: "Open Sans", sans-serif;
@@ -336,6 +464,16 @@ footer {
 .about_title {
   font-size: 4rem;
   line-height: 1;
+
+  @include breakpoint(md, max) {
+    font-size: 3rem; 
+    line-height: 1;
+  }
+
+  @include breakpoint(sm, max) {
+    font-size: 2rem; 
+    line-height: 1;
+  }
 }
 
 .about_title_section {
@@ -365,12 +503,22 @@ footer {
 }
 
 .about_contact {
+  display: flex;
+  flex-direction: column;
+
   p {
     margin: 0 
   }
 
   a {
     color: #4183c4;
+  }
+
+  @include breakpoint(sm, max) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
   }
 }
 
@@ -388,6 +536,16 @@ footer {
   font-size: 4rem;
   margin-top: 1rem;
   line-height: 1;
+
+  @include breakpoint(md, max) {
+    font-size: 3rem; 
+    line-height: 1;
+  }
+
+  @include breakpoint(sm, max) {
+    font-size: 2rem; 
+    line-height: 1;
+  }
 }
 
 .publication_google_scholar {
@@ -583,11 +741,71 @@ footer {
   position: sticky;
   top: 0; 
   z-index: 1000; 
-  background-color: rgba(255, 255, 255);
+  background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   padding: 10px 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+
+  @include breakpoint(sm, max) {
+    display: none;
+  }
+}
+
+.navigation_mobile {
+  @include breakpoint(sm, max) {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 1rem 0;
+    position: sticky;
+    top: 0; 
+    width: 100%;
+    z-index: 1000; 
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  @include breakpoint(sm) {
+    display: none;
+  }
+}
+
+.navigation_mobile.visible {
+  display: flex;
+}
+
+.hamburger {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+  width: 30px;
+}
+
+.nav_links {
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 44px; /* Adjust based on your navbar height */
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  z-index: 999;
+}
+
+.nav_links.active {
+    display: flex;
 }
 
 .nav_button {
